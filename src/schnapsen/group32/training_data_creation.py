@@ -1,0 +1,68 @@
+
+
+"""
+
+Create functions to generate training data for the Schnapsen game. with different amount of games and different opponents.
+
+Save the generated data to files for later use in training. Save files as: ML_bot_<opponent>_<number_of_games>.data
+%%time
+train_ML_model(Path('ML_replay_memories') / 'bully_replay_memory', Path('ML_models') / 'bully_model', "LR")
+"""
+
+
+from schnapsen.game import Bot, Move, PlayerPerspective
+from schnapsen.game import SchnapsenTrickScorer
+from schnapsen.deck import Card, Suit, Rank
+import pickle
+
+
+def generate_single_training_data(opponent_bot: Bot, num_games: int, file_name: str):
+    """
+    Generate training data by playing a specified number of games against a given opponent bot.
+    
+    Args:
+        opponent_bot (Bot): The bot to play against.
+        num_games (int): The number of games to play.
+        file_name (str): The name of the file to save the training data.
+    """
+    training_data = []
+    """
+# Creating directories for storing the game replays for training
+Path("ML_replay_memories").mkdir(parents=True, exist_ok=True)
+# And for storing the ml bot models
+Path("ML_models").mkdir(parents=True, exist_ok=True)
+
+bully = BullyBot(Random())
+rdeep = RdeepBot(10, 5, Random())
+ml_data = MLDataBot(bully, Path('ML_replay_memories') / 'bully_replay_memory')
+    """
+    for _ in range(num_games):
+        # Initialize game and bots
+        # Play game and collect data
+        # Append collected data to training_data list
+        pass  # Placeholder for game logic
+    
+    # Save training data to file
+    with open(file_name, 'wb') as f:
+        pickle.dump(training_data, f)
+
+def generate_mixed_training_data(opponent_bot_list: list, num_games: int, file_name: str):
+    """
+    Generate training data by playing a specified number of games against a given opponent bot.
+    
+    Args:
+        opponent_bot_list (list): The list of bots to play against.
+        num_games (int): The number of games to play.
+        file_name (str): The name of the file to save the training data.
+    """
+    training_data = []
+    
+    for _ in range(num_games):
+        # Initialize game and bots
+        # Play game and collect data
+        # Append collected data to training_data list
+        pass  # Placeholder for game logic
+    
+    # Save training data to file
+    with open(file_name, 'wb') as f:
+        pickle.dump(training_data, f)
