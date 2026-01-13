@@ -8,3 +8,6 @@ from schnapsen.game import Bot, Move, PlayerPerspective
 from schnapsen.game import SchnapsenTrickScorer
 from schnapsen.deck import Card, Suit, Rank
 import pickle
+
+
+# From Group32 push test
