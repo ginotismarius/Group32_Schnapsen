@@ -21,24 +21,21 @@ from pathlib import Path
 import pickle
 
 
-def generate_single_training_data(opponent_bot: Bot, num_games: int, file_name: str):
+def generate_single_training_data(opponent_bot: Bot, num_games: int):
     """
     Generate training data by playing a specified number of games against a given opponent bot.
     
     Args:
         opponent_bot (Bot): The bot to play against.
         num_games (int): The number of games to play.
-        file_name (str): The name of the file to save the training data.
     """
     training_data = []
-    
-    # Creating directories for storing the game replays for training
+    file_name = f"ML_bot_{opponent_bot.__class__.__name__}_{num_games}.data"
+
     Path("ML_training_data").mkdir(parents=True, exist_ok=True)
-    # And for storing the ml bot models
     Path("ML_models").mkdir(parents=True, exist_ok=True)
 
-    bully = BullyBot(Random())
-    rdeep = RdeepBot(10, 5, Random())
+
     ml_data = MLDataBot(bully, Path('ML_replay_memories') / 'bully_replay_memory')
     
     for _ in range(num_games):
@@ -72,5 +69,7 @@ def generate_mixed_training_data(opponent_bot_list: list, num_games: int, file_n
     with open(file_name, 'wb') as f:
         pickle.dump(training_data, f)
 
-
-generate_single_training_data()
+bully = BullyBot(Random())
+rdeep = RdeepBot(10, 5, Random())
+generate_single_training_data(bully, 10)
+generate_single_training_data(rdeep, 10)
