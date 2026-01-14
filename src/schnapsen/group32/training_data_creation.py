@@ -13,6 +13,11 @@ train_ML_model(Path('ML_replay_memories') / 'bully_replay_memory', Path('ML_mode
 from schnapsen.game import Bot, Move, PlayerPerspective
 from schnapsen.game import SchnapsenTrickScorer
 from schnapsen.deck import Card, Suit, Rank
+from schnapsen.bots import MLPlayingBot, MLDataBot, BullyBot, RdeepBot, train_ML_model
+import pandas as pd
+from pathlib import Path
+from random import Random
+from pathlib import Path
 import pickle
 
 
@@ -26,16 +31,16 @@ def generate_single_training_data(opponent_bot: Bot, num_games: int, file_name: 
         file_name (str): The name of the file to save the training data.
     """
     training_data = []
-    """
-# Creating directories for storing the game replays for training
-Path("ML_replay_memories").mkdir(parents=True, exist_ok=True)
-# And for storing the ml bot models
-Path("ML_models").mkdir(parents=True, exist_ok=True)
+    
+    # Creating directories for storing the game replays for training
+    Path("ML_training_data").mkdir(parents=True, exist_ok=True)
+    # And for storing the ml bot models
+    Path("ML_models").mkdir(parents=True, exist_ok=True)
 
-bully = BullyBot(Random())
-rdeep = RdeepBot(10, 5, Random())
-ml_data = MLDataBot(bully, Path('ML_replay_memories') / 'bully_replay_memory')
-    """
+    bully = BullyBot(Random())
+    rdeep = RdeepBot(10, 5, Random())
+    ml_data = MLDataBot(bully, Path('ML_replay_memories') / 'bully_replay_memory')
+    
     for _ in range(num_games):
         # Initialize game and bots
         # Play game and collect data
@@ -66,3 +71,6 @@ def generate_mixed_training_data(opponent_bot_list: list, num_games: int, file_n
     # Save training data to file
     with open(file_name, 'wb') as f:
         pickle.dump(training_data, f)
+
+
+generate_single_training_data()

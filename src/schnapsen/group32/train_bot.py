@@ -8,11 +8,3 @@ from schnapsen.game import Bot, Move, PlayerPerspective
 from schnapsen.game import SchnapsenTrickScorer
 from schnapsen.deck import Card, Suit, Rank
 import pickle
-
-
-# From Group32 push test
-
-# Change made in Marius branch
-# Test 2
-# Change made in Aurora branch
-# Trying to get changes from Marius to Group32 to ...
