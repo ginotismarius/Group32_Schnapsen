@@ -5,14 +5,14 @@ Create functions to generate training data for the Schnapsen game. with differen
 Save the generated data to files for later use in training. Save files as: ML_bot_<opponent>_<number_of_games>.data
 
 """
-
-from schnapsen.game import Bot
-from schnapsen.bots import MLPlayingBot, MLDataBot, BullyBot, RdeepBot, train_ML_model
-import pandas as pd
+from schnapsen.game import Bot , SchnapsenGamePlayEngine
+from schnapsen.bots import MiniMaxBot, AlphaBetaBot, BullyBot, RdeepBot, RandBot
 from pathlib import Path
 from random import Random
 from train_bot import updating_ml_bot
-import pickle
+
+#import pandas as pd
+
 
 
 def generate_single_training_data(opponent_bot: Bot, num_games: int):
@@ -25,32 +25,37 @@ def generate_single_training_data(opponent_bot: Bot, num_games: int):
     """
 
     # Determine file paths
-    current_dir = Path(__file__).resolve().parent
-    current_root = current_dir.parent
+    root_dir = Path(__file__).resolve().parent
 
-    final_training_data_dir = current_root / "ML_training_data"
-    final_training_data_dir.mkdir(parents=True, exist_ok=True)
+    replay_dir = root_dir / "ML_replay_memories"
+    replay_dir.mkdir(parents=True, exist_ok=True)
 
-    replay_memory_dir = current_root / "ML_replay_memories"
-    replay_memory_dir.mkdir(parents=True, exist_ok=True)
-
-    model_dir = current_root / "ML_models"
+    model_dir = root_dir / "ML_models"
     model_dir.mkdir(parents=True, exist_ok=True)
 
-    file_path = final_training_data_dir / f"ML_bot_{opponent_bot.__class__.__name__}_{num_games}.data"
+    print(f"Generating training data against {opponent_bot} for {num_games} games.")
 
-    # Collect training data
-    #training_data = updating_ml_bot(opponent_bot, num_games, replay_memory_dir)
-    training_data = {}
-    # Save final training data to file
-    with open(file_path, 'wb') as f:
-        pickle.dump(training_data,f)
+    model_path = updating_ml_bot(opponent_bot, num_games, replay_dir,model_dir)
 
-    #show The final generated data
-    #df = pd.DataFrame(training_data["data"])
-    #print(df)
+    if model_path is not None:
+        raise RuntimeError("Model training failed, no model path returned.")
+    
+    print(f"Training data saved to {model_path}\n")
 
-bully = BullyBot(Random())
-rdeep = RdeepBot(10, 5, Random())
-generate_single_training_data(bully, 10)
-generate_single_training_data(rdeep, 10)
+
+# Define different opponents
+set_rng = Random(12345)
+opponents = [
+    BullyBot(set_rng, 'BullyBot'),
+    RdeepBot(10, 5, set_rng, 'RdeepBot_depth5'),
+    #AlphaBetaBot('AlphaBetaBot'), Bot only works in phase 2, use another bot in phase 1 then switch somehow ?
+    #MiniMaxBot('MiniMaxBot'),
+    RandBot(set_rng, 'Randy'),
+]
+
+# Define different numbers of games
+game_counts = [5, 10, 50]
+
+for opponent in opponents:
+    for num_games in game_counts:
+        generate_single_training_data(opponent, num_games)
