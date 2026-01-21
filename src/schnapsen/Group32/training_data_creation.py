@@ -1,61 +1,58 @@
-"""
-
-Create functions to generate training data for the Schnapsen game. with different amount of games and different opponents.
-
-Save the generated data to files for later use in training. Save files as: ML_bot_<opponent>_<number_of_games>.data
-
-"""
+from turtle import pd
 from schnapsen.game import Bot , SchnapsenGamePlayEngine
-from schnapsen.bots import MiniMaxBot, AlphaBetaBot, BullyBot, RdeepBot, RandBot
+from schnapsen.bots import MiniMaxBot, AlphaBetaBot, BullyBot, RdeepBot, RandBot , MLDataBot, MLPlayingBot
 from pathlib import Path
 from random import Random
 from train_bot import updating_ml_bot
-
-#import pandas as pd
-
+from pathlib import Path
 
 
-def generate_single_training_data(opponent_bot: Bot, num_games: int):
-    """
-    Generate training data by playing a specified number of games against a given opponent bot.
-    
+ROOT_DIR = Path(__file__).resolve().parent
+
+def single_iterative_training(opponent_bot: Bot, total_games: int, model_class: str,iterations: int =3):
+    """Generate training data by updating the ML bot iteratively against a given opponent.
     Args:
-        opponent_bot (Bot): The bot to play against.
-        num_games (int): The number of games to play.
+        opponent_bot (Bot): The opponent bot to play against.
+        total_games (int): The total number of games to play for training data.
+        model_training_class (str): The class/type of the ML model (e.g., 'NN', 'LR').
+        iterations (int): Number of iterations to update the ML bot.
     """
 
-    # Determine file paths
-    root_dir = Path(__file__).resolve().parent
+    games_per_iteration = total_games // iterations
 
-    replay_dir = root_dir / "ML_replay_memories"
-    replay_dir.mkdir(parents=True, exist_ok=True)
+    replay_dir = ROOT_DIR / f"{model_class}_ML_replay_memories"
+    model_dir = ROOT_DIR / f"{model_class}_ML_models"
+    behaviour_bot = RandBot(Random(10)) # Using a random bot as the base behaviour bot
 
-    model_dir = root_dir / "ML_models"
-    model_dir.mkdir(parents=True, exist_ok=True)
+    for iteration in range(iterations):
+        replay_file = replay_dir / f"replay_memory_{opponent_bot}_{total_games}_{model_class}_iteration_{iteration}.txt"
+        model_path = model_dir / f"ML_bot_{opponent_bot}_{total_games}_{model_class}_iteration_{iteration}.model"
+        test_file = updating_ml_bot(behaviour_bot, opponent_bot, games_per_iteration, replay_file, model_path, model_class)
+        if test_file is not None:
+            behaviour_bot = MLPlayingBot(model_location=model_path)
+        else:
+            print(f"Skipping iteration {iteration} due to insufficient data.")
 
-    print(f"Generating training data against {opponent_bot} for {num_games} games.")
 
-    model_path = updating_ml_bot(opponent_bot, num_games, replay_dir,model_dir)
-
-    if model_path is not None:
-        raise RuntimeError("Model training failed, no model path returned.")
-    
-    print(f"Training data saved to {model_path}\n")
-
+    print(
+        f"Finished {model_class} training vs {opponent_bot} "
+        f"({total_games} games, {iterations} iterations)"
+    )
 
 # Define different opponents
-set_rng = Random(12345)
+set_rng = Random()
 opponents = [
     BullyBot(set_rng, 'BullyBot'),
-    RdeepBot(10, 5, set_rng, 'RdeepBot_depth5'),
-    #AlphaBetaBot('AlphaBetaBot'), Bot only works in phase 2, use another bot in phase 1 then switch somehow ?
-    #MiniMaxBot('MiniMaxBot'),
+    RdeepBot(5, 5, set_rng, 'RdeepBot_depth5'),
+    RdeepBot(5, 10, set_rng, 'RdeepBot_depth10'),
     RandBot(set_rng, 'Randy'),
 ]
 
-# Define different numbers of games
-game_counts = [5, 10, 50]
+# Define different numbers of games, and training modes
+game_counts = [30,60,90]
+training_modes = ['NN', 'LR']
 
 for opponent in opponents:
-    for num_games in game_counts:
-        generate_single_training_data(opponent, num_games)
+    for total_games in game_counts:
+        for model_class in training_modes:
+            single_iterative_training(opponent, total_games, model_class)

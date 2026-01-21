@@ -69,6 +69,8 @@ def tournament_all(bots: list[Bot], rng: random.Random, num_rounds: int):
         score1 = 0
         score2 = 0
         for _ in range(num_rounds):
+            if num_rounds % 10 == 0:
+                print(f"  Playing round {_+1}/{num_rounds} between {bot1} and {bot2}...")
             engine = SchnapsenGamePlayEngine()
             winner, points, score = engine.play_game(bot1, bot2, rng)
             if winner == bot1:
