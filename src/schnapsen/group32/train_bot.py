@@ -22,18 +22,17 @@ def updating_ml_bot(behaviour_ml_bot: Bot,opponent_bot: Bot, num_games: int,repl
     replay_file.parent.mkdir(parents=True, exist_ok=True)
     model_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Making the ML that has no data so plays randomly at first
     ml_bot = MLDataBot(bot=behaviour_ml_bot, replay_memory_location=replay_file)
 
     for game_index in range(num_games):
-        eng.play_game(ml_bot,opponent_bot,Random())
+        eng.play_game(ml_bot,opponent_bot,Random(game_index+42)) # Fixed seed for reproducibility 
     # After playing the games, train the ML model
     if check_replay_file(replay_file):
         train_ML_model(replay_memory_location=replay_file, model_location=model_path, model_class=model_class)
         return model_path
     else:
         print(f"Insufficient data in replay file {replay_file} vs {opponent_bot}, skipping model training.")
-        print("ML only lost or won all games, need at least one of each to train.")
+        #print("ML only lost or won all games, need at least one of each to train.")
         return None
 
 
