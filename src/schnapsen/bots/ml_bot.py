@@ -189,7 +189,7 @@ def train_ML_model(replay_memory_location: Optional[pathlib.Path],
         # needs a bigger dataset, but if you find the correct combination of neurons and neural layers and provide a big enough training dataset can lead to better performance
 
         # one layer of 30 neurons
-        hidden_layer_sizes = (30)
+        hidden_layer_sizes = (50) # Note Group32 changed from 30 to 50
         # two layers of 30 and 5 neurons respectively
         # hidden_layer_sizes = (30, 5)
 
@@ -211,7 +211,7 @@ def train_ML_model(replay_memory_location: Optional[pathlib.Path],
         print("Training a Simple (Linear Logistic Regression) model")
 
         # Usually there is no reason to change the hyperparameters of such a simple model but fill free to experiment:
-        learner = LogisticRegression(max_iter=1000)
+        learner = LogisticRegression(max_iter=2000) # Noted Group32 changed from 1000 to 2000
     else:
         raise AssertionError("Unknown model class")
 
