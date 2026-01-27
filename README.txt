@@ -84,9 +84,8 @@ Remove """ from line 94|97.
 Remove # from line 95.
 The code section saves the models so training can be skipped in future runs.
 
-!!!  Recommended to start from this step!
-Step 2.2. Loading the models from previous save. (Highly recommended) (GitHub only)
-!!!  Recommended to start from this step!
+!!!  Recommended to start from this step! (GitHub only)
+Step 2.2. Loading the models from previous save. (Highly recommended)
 
 Remove """ from line 94|97.
 
