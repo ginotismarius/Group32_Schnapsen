@@ -139,7 +139,7 @@ def smooth_curve(y, window_size):
 def confidence_intervals(mean,std,z=1.96):
     """
     Getting the standard deviation in plots to represents the variability or dispersion of data around a mean value
-    Love finding out when reading about mathlib plot documentation that there was an easier way to use plt.errorbar WeeWooWeeWoo slowly losing it.
+    Love finding out when reading mathlib plot documentation that there was an easier way to do this by using plt.errorbar WeeWooWeeWoo slowly losing it.
 
     68% CI → z = 1.0
     90% CI → z ≈ 1.645
