@@ -1,5 +1,8 @@
+"""
+File for training agents on specific choosen parameters.
+"""
 from schnapsen.game import Bot,SchnapsenGamePlayEngine
-from schnapsen.bots import  RandBot , MLPlayingBot,MLDataBot,train_ML_model
+from schnapsen.bots import  RandBot, MLPlayingBot,MLDataBot,train_ML_model
 from pathlib import Path
 from random import Random
 from pathlib import Path
@@ -168,8 +171,8 @@ def updating_ml_bot(
         rng: Random
         ) -> Path:
     """
-    Plays games against a fixed opponent, stores replay data, and trains an ML model.
-
+    Plays games against a fixed opponent, stores replay data, and trains an ML model. 
+    (uses old iteration model policy)
     Args:
         behaviour_ml_bot: Bot - Current policy used to generate training data.
         opponent : Bot - Opponent played during this training phase.
