@@ -173,7 +173,7 @@ def plot_learning_curve(
         mixed_models: list[Bot] - A list of models trained against mixed oponents with their iterations
         total_games: int - Total games used in training
         iterations: Amount of iterations saved of the models
-        smooth_window: int - Neighbouring points to compare to amount (default = 2)
+        smooth_window: int - Amount of Neighbouring points to compare to (default = 2)
         eval_games: int - How many games we will run to get win rate statistics (default =100)
         repeats: int - Amount of times we will rerun the test with different seeds (default =10)
     """
@@ -250,7 +250,7 @@ def plot_generalization_curve(
         mixed_models: list[Bot] - A list of models trained against mixed oponents with their iterations
         total_games: int - Total games used in training
         iterations: Amount of iterations saved of the models
-        smooth_window: int - Neighbouring points to compare to amount (default = 2)
+        smooth_window: int - Amount of Neighbouring points to compare to (default = 2)
         eval_games: int - How many games we will run to get win rate statistics (default =100)
         repeats: int - Amount of times we will rerun the test with different seeds (default =10)
     """

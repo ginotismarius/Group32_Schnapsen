@@ -1,3 +1,6 @@
+Note: to keep everything anonymous I am unable to add the GitHub repository fork link we worked on.
+Added (GitHub only) to notify where this might be an issue.
+
 Schnapsen ML Experiments
 =======================
 
@@ -48,7 +51,7 @@ How to run the experiment:
 All experiments are controlled from experiment.py.
 
 Training ML models can take a significant amount of time. For convenience results.zip is included and contains pre-trained
-models used in the evaluation.To save time, it is recommended to load these models instead of retraining.
+models used in the evaluation. To save time, it is recommended to load these models instead of retraining. (GitHub only)
 
 - All experiments use a fixed random seed: experiment_rng = Random(20)
 - Evaluation runs use multiple seeds to reduce variance
@@ -58,6 +61,11 @@ models used in the evaluation.To save time, it is recommended to load these mode
 Step 0. (Optional)
 Select training parameters in experiment.py with wanted values. These will be used when training the models.
 These parameters control training and evaluation behaviour. Comments in the code explain each one.
+
+Important: Since pre trained model save file cannot be included. 
+This is because the submissions has to be anonymous and the GitHub repository commits show group names.
+It is recommended to lower the total_games... and iterations_... while training the ML models.
+Training and evaluating with higher numbers was done overnight.
 
 Key parameters:
 
