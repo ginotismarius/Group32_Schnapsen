@@ -37,7 +37,7 @@ Requirements
 - Python 3.10 or newer (Worked on 3.13.9)
 - All other required Python packages are listed in requirements.txt
 
-Install dependencies:
+Install dependencies: (GitHub only)
     by running setup_pyvenv.bat 
     or
     pip install -r requirements.txt
@@ -70,7 +70,7 @@ evaluation_games
 evaluation_repeats
 ========================
 
-Step 1. Training New Models (Should be skipped to when loading from file):
+Step 1. Training New Models (Should be skipped to when loading from file): (GitHub only)
 Remove """ from line 89|92. 
 The code inside this block will Train LR and NN models with selected parameters.
 Save iterations of the models and their replays.
@@ -85,13 +85,13 @@ Remove # from line 95.
 The code section saves the models so training can be skipped in future runs.
 
 !!!  Recommended to start from this step!
-Step 2.2. Loading the models from previous save. (Highly recommended)
+Step 2.2. Loading the models from previous save. (Highly recommended) (GitHub only)
 !!!  Recommended to start from this step!
 
 Remove """ from line 94|97.
 
 Note: Extract "results.zip" and ensure file is located in the same directory as experiment.py. (Other locations untested)
-Currently saved models in results.zip are:
+Currently saved models in results.zip are: (GitHub only)
 LR Models:
 * Trained on 5000 games
 * 50 training iterations
@@ -133,4 +133,4 @@ Remove """" from line 121|129
 No additional changes are required.
 ========================
 
-Step 4. Run the file
+Step 4. Run the file experiment.py
