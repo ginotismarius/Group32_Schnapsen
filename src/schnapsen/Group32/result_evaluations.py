@@ -121,10 +121,20 @@ def evaluate_final_model_iteration_matrix(bots: list[Bot], eval_games: int, repe
 def smooth_curve(y, window_size):
     """
     Smoothing the learning plot curves by taking the x:(window_size) neibouring points into consideration.
+    Uses only available points near the boundaries.
+    Preserves first and last points.
     """
-    if len(y) < window_size:
-        return np.array(y)
-    return np.convolve(y,np.ones(window_size)/window_size,mode="same")
+    y = np.asarray(y, dtype=float)
+    smoothed = np.empty_like(y)
+
+    half = window_size // 2
+
+    for i in range(len(y)):
+        start = max(0, i - half)
+        end = min(len(y), i + half + 1)
+        smoothed[i] = np.mean(y[start:end])
+
+    return smoothed
 
 def confidence_intervals(mean,std,z=1.96):
     """
@@ -172,11 +182,10 @@ def plot_learning_curve(
     games_per_iteration = total_games // iterations
     drop = smooth_window // 2
 
+    x = [0] + [min((i + 1) * games_per_iteration, total_games) for i in range(len(mixed_models))]
+    
     baseline_bot = RandBot(Random(0), "Baseline")
     baseline_mean, baseline_std = evaluate_bot(baseline_bot, evaluate_against, eval_games, repeats)
-
-    x = [0] + [min((i + 1) * games_per_iteration, total_games) for i in range(len(mixed_models))]
-    x = x[drop:-drop]
 
     # Single opponent learning curves
     for opponent, bots in single_models_by_opponent.items():
@@ -188,9 +197,6 @@ def plot_learning_curve(
 
         means_s = smooth_curve(means, smooth_window)
         stds_s = smooth_curve(stds, smooth_window)
-
-        means_s = means_s[drop:-drop]
-        stds_s  = stds_s[drop:-drop]
 
         lower, upper = confidence_intervals(means_s, stds_s)
 
@@ -206,9 +212,6 @@ def plot_learning_curve(
     mixed_means_s =smooth_curve(mixed_means, smooth_window)
     mixed_stds_s = smooth_curve(mixed_stds, smooth_window)
 
-    mixed_means_s = mixed_means_s[drop:-drop]
-    mixed_stds_s  = mixed_stds_s[drop:-drop]
-
     lower, upper = confidence_intervals(mixed_means_s, mixed_stds_s)
 
     plt.plot(x,mixed_means_s,linestyle="dotted",linewidth=3,color="black",label="Mixed training")
@@ -218,7 +221,7 @@ def plot_learning_curve(
     plt.ylabel("Win Rate")
     plt.title(f"Model trained using {model_class} learning curve (evaluated vs {evaluate_against})")
     plt.legend()
-    plt.xlim(min(x), max(x))
+    plt.xlim(0,total_games)
     plt.ylim(0,1)
     plt.grid(True)
     plt.tight_layout()
@@ -257,7 +260,6 @@ def plot_generalization_curve(
     drop = smooth_window // 2
 
     x = [0] + [min((i + 1) * games_per_iteration, total_games) for i in range(len(mixed_models))]
-    x = x[drop:-drop]
 
     baseline_bot = RandBot(Random(0), "Baseline")
     baseline_means, baseline_stds = evaluate_learning_multiple_opponents([baseline_bot], evaluation_opponents, eval_games, repeats)
@@ -275,9 +277,6 @@ def plot_generalization_curve(
         means_s = smooth_curve(means, smooth_window)
         stds_s = smooth_curve(stds, smooth_window)
         
-        means_s = means_s[drop:-drop]
-        stds_s  = stds_s[drop:-drop]
-
         lower, upper = confidence_intervals(means_s, stds_s)
 
         plt.plot(x, means_s, linestyle="solid", linewidth=3, label=f"Trained vs {opponent}")
@@ -292,9 +291,6 @@ def plot_generalization_curve(
     mixed_means_s = smooth_curve(mixed_means, smooth_window)
     mixed_stds_s = smooth_curve(mixed_stds, smooth_window)
 
-    mixed_means_s = mixed_means_s[drop:-drop]
-    mixed_stds_s  = mixed_stds_s[drop:-drop]
-
     lower, upper = confidence_intervals(mixed_means_s, mixed_stds_s)
 
     plt.plot(x, mixed_means_s, linestyle="dotted",linewidth=3, color="black", label="Mixed training")
@@ -306,7 +302,7 @@ def plot_generalization_curve(
     plt.title(f"{model_class} Mean Performance against All Opponents")
     plt.legend()
     plt.grid(True)
-    plt.xlim(min(x), max(x))
+    plt.xlim(0,total_games)
     plt.ylim(0,1)
     plt.tight_layout()
     plt.savefig(f"{model_class}_learning_curve_mean.png")
